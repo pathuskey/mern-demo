@@ -1,0 +1,32 @@
+name: mean-demo
+services:
+  appserver:
+    type: node
+    build:
+      - yarn --cwd server
+    command: nodemon server/index.js
+    globals:
+      nodemon: latest
+    ssl: false
+    port: 3000
+  # appclient:
+  #   type: node
+  #   build:
+  #     - yarn --cwd client
+  #   command: HOST=client.meandemo.com PORT=8000 yarn --cwd client start
+  #   ssl: false
+  #   port: 8000
+  database:
+    type: mongo
+    portforward: true
+proxy:
+  appserver:
+    - server.meandemo.com:3000
+  # appclient:
+  #   - client.meandemo.com:8000
+tooling:
+  nodemon:
+    service: appserver
+exclude:
+  - client
+  - server/node_modules
