@@ -3,12 +3,12 @@ services:
   appserver:
     type: node
     build:
-      - yarn --cwd server
-    command: nodemon server/index.js
+      - yarn
+    command: nodemon index.js
     globals:
       nodemon: latest
     ssl: false
-    port: 3000
+    port: 8080
   # appclient:
   #   type: node
   #   build:
@@ -21,7 +21,7 @@ services:
     portforward: true
 proxy:
   appserver:
-    - server.meandemo.com:3000
+    - server.meandemo.com:8080
   # appclient:
   #   - client.meandemo.com:8000
 tooling:

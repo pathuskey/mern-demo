@@ -1,7 +1,7 @@
 import axios from "axios"
 
 const api = axios.create({
-  baseURL: "http://server.meandemo.com:8080/api"
+  baseURL: "http://server.meandemo.com:8000/api"
 })
 
 export const insertMovie = payload => api.post(`/movie`, payload)
