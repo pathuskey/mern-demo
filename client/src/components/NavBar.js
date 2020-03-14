@@ -51,7 +51,7 @@ const NavBar = () => {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <Link href="/" className={classes.icon}>
             <img src={logo} width="50" height="50" alt="logo" />

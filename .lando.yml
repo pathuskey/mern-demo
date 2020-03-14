@@ -3,8 +3,8 @@ services:
   appserver:
     type: node
     build:
-      - yarn
-    command: nodemon index.js
+      - yarn --cwd server
+    command: nodemon server/index.js
     globals:
       nodemon: latest
     ssl: false

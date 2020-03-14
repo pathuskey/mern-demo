@@ -5,22 +5,33 @@ import TextField from "@material-ui/core/TextField"
 import { MuiPickersUtilsProvider, TimePicker } from "@material-ui/pickers"
 import DateFnsUtils from "@date-io/date-fns"
 import "date-fns"
-import indigo from "@material-ui/core/colors/indigo"
+import grey from "@material-ui/core/colors/grey"
 import Card from "@material-ui/core/Card"
 import { makeStyles } from "@material-ui/core/styles"
 import DeleteIcon from "@material-ui/icons/Delete"
 import IconButton from "@material-ui/core/IconButton"
+import ScheduleIcon from "@material-ui/icons/Schedule"
+import GradeIcon from "@material-ui/icons/GradeOutlined"
+import VideoIcon from "@material-ui/icons/VideocamOutlined"
 import Tooltip from "@material-ui/core/Tooltip"
 import Grid from "@material-ui/core/Grid"
+import InputAdornment from "@material-ui/core/InputAdornment"
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   card: {
-    borderColor: indigo["A100"]
+    borderColor: grey.A100
+  },
+  margin: {
+    marginRight: theme.spacing(1)
   }
-})
+}))
 
 const EditForm = ({ movie, handleDataChange }) => {
   const classes = useStyles()
+
+  if (!movie.rating) {
+    movie.rating = 0
+  }
 
   if (!movie.times) {
     movie.times = []
@@ -56,11 +67,18 @@ const EditForm = ({ movie, handleDataChange }) => {
     <>
       <Box my={2}>
         <TextField
-          id="name"
-          label="Name"
+          id="title"
+          label="Title"
           value={movie.name || ""}
           onChange={handleChangeInputName}
-          required
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <VideoIcon />
+              </InputAdornment>
+            )
+          }}
         />
       </Box>
 
@@ -69,13 +87,23 @@ const EditForm = ({ movie, handleDataChange }) => {
           id="rating"
           label="Rating"
           type="number"
-          step="0.1"
-          lang="en-US"
-          min="0"
-          max="10"
-          pattern="[0-9]+([,\.][0-9]+)?"
-          value={movie.rating || 0}
+          value={movie.rating}
           onChange={handleChangeInputRating}
+          fullWidth
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <GradeIcon />
+              </InputAdornment>
+            )
+          }}
+          inputProps={{
+            step: "0.5",
+            lang: "en-US",
+            min: "0",
+            max: "10",
+            pattern: "[0-9]+([,.][0-9]+)?"
+          }}
         />
       </Box>
 
@@ -86,7 +114,14 @@ const EditForm = ({ movie, handleDataChange }) => {
         className={classes.card}
         variant="outlined"
       >
-        <Typography>Available Show Times</Typography>
+        <Grid container alignItems="center">
+          <Grid item className={classes.margin}>
+            <ScheduleIcon style={{ marginTop: 3 }} />
+          </Grid>
+          <Grid item>
+            <Typography>Available Show Times</Typography>
+          </Grid>
+        </Grid>
         {movie.times &&
           movie.times.map((time, i) => (
             <Grid container alignItems="center" key={`times-${i}`}>
@@ -97,6 +132,7 @@ const EditForm = ({ movie, handleDataChange }) => {
                   label="Time"
                   value={time}
                   onChange={val => handleChangeInputTime(val, i)}
+                  style={{ width: "calc(100% - 30px)" }}
                 />
               </MuiPickersUtilsProvider>
 
@@ -123,6 +159,7 @@ const EditForm = ({ movie, handleDataChange }) => {
               onChange={val => handleChangeInputTime(val, movie.times.length)}
               minutesStep={5}
               format="HH:mm"
+              style={{ width: "calc(100% - 30px)" }}
             />
           </MuiPickersUtilsProvider>
         </Grid>
