@@ -17,7 +17,7 @@ function App() {
           container
           alignItems="center"
           justify="center"
-          style={{ height: "calc(100vh - 32px)" }}
+          style={{ minHeight: "calc(100vh - 128px)", paddingTop: 32 }}
         >
           <Switch>
             <Route path="/" exact component={MoviesList} />

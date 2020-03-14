@@ -11,8 +11,9 @@ resources:
 
 handlers:
   - url: /.*
-    static_files: build/index.html
-    upload: build/index.html
     secure: always
     redirect_http_response_code: 301
     script: auto
+
+env_variables:
+  MONGO_CONNECTION: mongodb+srv://cinema_user:iel3cdb6rWzX7seV@cluster0-d96py.gcp.mongodb.net/test?retryWrites=true&w=majority

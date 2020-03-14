@@ -12,7 +12,6 @@ import TableCell from "@material-ui/core/TableCell"
 import TableContainer from "@material-ui/core/TableContainer"
 import TableHead from "@material-ui/core/TableHead"
 import TableRow from "@material-ui/core/TableRow"
-import TableFooter from "@material-ui/core/TableFooter"
 import TablePagination from "@material-ui/core/TablePagination"
 import Paper from "@material-ui/core/Paper"
 import DeleteIcon from "@material-ui/icons/Delete"
@@ -151,7 +150,8 @@ const searchStyles = makeStyles(theme => ({
     marginLeft: "auto",
     width: "100%",
     maxWidth: 300,
-    color: grey[600]
+    color: grey[600],
+    boxSizing: "border-box"
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -162,7 +162,7 @@ const searchStyles = makeStyles(theme => ({
 const paginationStyles = makeStyles(theme => ({
   root: {
     flexShrink: 0,
-    marginLeft: theme.spacing(2.5)
+    marginLeft: "auto"
   }
 }))
 
@@ -245,7 +245,9 @@ const MoviesList = () => {
   let filteredMovies = movies
 
   if (searchText) {
-    filteredMovies = movies.filter(movie => movie.name.indexOf(searchText) > -1)
+    filteredMovies = movies.filter(
+      movie => movie.name.toLowerCase().indexOf(searchText.toLowerCase()) > -1
+    )
   }
 
   const handleChangePage = (event, newPage) => {
@@ -344,138 +346,139 @@ const MoviesList = () => {
     <>
       {movies && movies.length > 0 && (
         <>
-          <TableContainer component={Paper}>
-            <Table aria-label="customized table">
-              <TableHead>
-                <TableRow>
-                  <StyledTableCell>
-                    <Grid container spacing={1} alignItems="center">
-                      <Grid item>
-                        <VideoIcon style={{ verticalAlign: "middle" }} />
-                      </Grid>
-                      <Grid item>
-                        <Typography>Movie Title</Typography>
-                      </Grid>
-                    </Grid>
-                  </StyledTableCell>
-                  <StyledTableCell align="center">
-                    <Grid
-                      container
-                      spacing={1}
-                      alignItems="center"
-                      justify="center"
-                    >
-                      <Grid item>
-                        <GradeIcon style={{ verticalAlign: "middle" }} />
-                      </Grid>
-                      <Grid item>
-                        <Typography>Rating</Typography>
-                      </Grid>
-                    </Grid>
-                  </StyledTableCell>
-                  <StyledTableCell>
-                    <Grid container spacing={1} alignItems="center">
-                      <Grid item>
-                        <ScheduleIcon style={{ verticalAlign: "middle" }} />
-                      </Grid>
-                      <Grid item>
-                        <Typography>Times</Typography>
-                      </Grid>
-                    </Grid>
-                  </StyledTableCell>
-                  <StyledTableCell align="right">
-                    <Paper component="form" className={searchClasses.root}>
-                      <SearchIcon />
-                      <InputBase
-                        id="search"
-                        className={searchClasses.input}
-                        onChange={handleChangeInputSearch}
-                        placeholder="Search..."
-                        inputProps={{ "aria-label": "search" }}
-                      />
-                    </Paper>
-                  </StyledTableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {filteredMovies && filteredMovies.length > 0 ? (
-                  (rowsPerPage > 0
-                    ? filteredMovies.slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                    : filteredMovies
-                  ).map(movie => (
-                    <StyledTableRow key={movie._id}>
-                      <StyledTableCell>{movie.name}</StyledTableCell>
-                      <StyledTableCell align="center">
-                        {movie.rating}
-                      </StyledTableCell>
-                      <StyledTableCell>
-                        {movie.times.map((time, i) => {
-                          const formattedDate = new Date(
-                            time
-                          ).toLocaleTimeString("en-US", {
-                            hour: "2-digit",
-                            minute: "2-digit"
-                          })
-
-                          return (
-                            <Box
-                              key={i}
-                              component={Chip}
-                              mr={1}
-                              label={formattedDate}
-                            />
-                          )
-                        })}
-                      </StyledTableCell>
-                      <StyledTableCell align="right">
-                        <UpdateMovie onClick={() => handleEditMovie(movie)} />
-                        <DeleteMovie
-                          onClick={() => handleDeleteMovieConfirm(movie)}
-                        />
-                      </StyledTableCell>
-                    </StyledTableRow>
-                  ))
-                ) : (
-                  <StyledTableRow>
-                    <StyledTableCell align="center" colspan={4}>
-                      <Box component={Typography} py={3} color="text.secondary">
-                        No Results Found...
-                      </Box>
-                    </StyledTableCell>
-                  </StyledTableRow>
-                )}
-              </TableBody>
-
-              {filteredMovies.length > 10 && (
-                <TableFooter>
+          <Paper style={{ overflow: "hidden", width: "100%" }}>
+            <TableContainer style={{ maxHeight: "73vh" }}>
+              <Table stickyHeader aria-label="customized table">
+                <TableHead>
                   <TableRow>
-                    <TablePagination
-                      rowsPerPageOptions={[
-                        10,
-                        25,
-                        50,
-                        { label: "All", value: -1 }
-                      ]}
-                      colSpan={3}
-                      count={movies.length}
-                      rowsPerPage={rowsPerPage}
-                      page={page}
-                      SelectProps={{
-                        inputProps: { "aria-label": "rows per page" },
-                        native: true
-                      }}
-                      onChangePage={handleChangePage}
-                      onChangeRowsPerPage={handleChangeRowsPerPage}
-                      ActionsComponent={TablePaginationActions}
-                    />
+                    <StyledTableCell>
+                      <Grid container spacing={1} alignItems="center">
+                        <Grid item>
+                          <VideoIcon style={{ verticalAlign: "middle" }} />
+                        </Grid>
+                        <Grid item>
+                          <Typography>Movie Title</Typography>
+                        </Grid>
+                      </Grid>
+                    </StyledTableCell>
+                    <StyledTableCell align="center">
+                      <Grid
+                        container
+                        spacing={1}
+                        alignItems="center"
+                        justify="center"
+                      >
+                        <Grid item>
+                          <GradeIcon style={{ verticalAlign: "middle" }} />
+                        </Grid>
+                        <Grid item>
+                          <Typography>Rating</Typography>
+                        </Grid>
+                      </Grid>
+                    </StyledTableCell>
+                    <StyledTableCell>
+                      <Grid container spacing={1} alignItems="center">
+                        <Grid item>
+                          <ScheduleIcon style={{ verticalAlign: "middle" }} />
+                        </Grid>
+                        <Grid item>
+                          <Typography>Times</Typography>
+                        </Grid>
+                      </Grid>
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      <Paper component="form" className={searchClasses.root}>
+                        <SearchIcon />
+                        <InputBase
+                          id="search"
+                          className={searchClasses.input}
+                          onChange={handleChangeInputSearch}
+                          placeholder="Search..."
+                          inputProps={{ "aria-label": "search" }}
+                        />
+                      </Paper>
+                    </StyledTableCell>
                   </TableRow>
-                </TableFooter>
-              )}
-            </Table>
-          </TableContainer>
+                </TableHead>
+                <TableBody>
+                  {filteredMovies && filteredMovies.length > 0 ? (
+                    (rowsPerPage > 0
+                      ? filteredMovies.slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage
+                        )
+                      : filteredMovies
+                    ).map(movie => (
+                      <StyledTableRow key={movie._id}>
+                        <StyledTableCell>{movie.name}</StyledTableCell>
+                        <StyledTableCell align="center">
+                          {movie.rating}
+                        </StyledTableCell>
+                        <StyledTableCell>
+                          {movie.times.map((time, i) => {
+                            const formattedDate = new Date(
+                              time
+                            ).toLocaleTimeString("en-US", {
+                              hour: "2-digit",
+                              minute: "2-digit"
+                            })
+
+                            return (
+                              <Box
+                                key={i}
+                                component={Chip}
+                                mr={1}
+                                label={formattedDate}
+                              />
+                            )
+                          })}
+                        </StyledTableCell>
+                        <StyledTableCell align="right">
+                          <UpdateMovie onClick={() => handleEditMovie(movie)} />
+                          <DeleteMovie
+                            onClick={() => handleDeleteMovieConfirm(movie)}
+                          />
+                        </StyledTableCell>
+                      </StyledTableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell align="center" colspan={4}>
+                        <Box
+                          component={Typography}
+                          py={3}
+                          color="text.secondary"
+                        >
+                          No Results Found...
+                        </Box>
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            {filteredMovies.length > 10 && (
+              <TablePagination
+                rowsPerPageOptions={[10, 25, 50, { label: "All", value: -1 }]}
+                component="div"
+                count={movies.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: { "aria-label": "rows per page" },
+                  native: true
+                }}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+                style={{
+                  boxShadow: "0px 0px 3px 0px rgba(0, 0, 0, 0.15)",
+                  position: "relative",
+                  background: grey[50]
+                }}
+              />
+            )}
+          </Paper>
 
           <ThemeProvider theme={addTheme}>
             <Tooltip title="Add">
